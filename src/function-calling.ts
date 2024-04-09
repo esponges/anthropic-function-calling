@@ -1,15 +1,22 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { Tool } from '@anthropic-ai/sdk/resources/beta/tools/messages.mjs';
+import type { Tool } from '@anthropic-ai/sdk/resources/beta/tools/messages.mjs';
 import dotenv from 'dotenv';
 dotenv.config();
 
+let apiKey: string | undefined = '';
+
+if (process.env.ANTHROPIC_API_KEY !== '') {
+  apiKey = process.env.ANTHROPIC_API_KEY;
+}
+
 const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
+  apiKey
 });
 
 const MODEL_NAME = 'claude-3-haiku-20240307';
 
-function getWeather(location: string) {
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+async function getWeather (location: string) {
   const tools: Tool[] = [
     {
       name: 'get_weather',
@@ -26,6 +33,10 @@ function getWeather(location: string) {
             enum: ['celsius', 'fahrenheit'],
             description: 'The unit to return the temperature in',
           },
+          temperature: {
+            type: 'number',
+            description: 'The temperature to return',
+          },
         },
       },
     },
@@ -39,7 +50,7 @@ function getWeather(location: string) {
   Use the get_weather tool.
   `;
 
-  const response = anthropic.beta.tools.messages.create({
+  const response = await anthropic.beta.tools.messages.create({
     model: MODEL_NAME,
     max_tokens: 4096,
     tools,
@@ -54,4 +65,10 @@ function getWeather(location: string) {
   return response;
 }
 
-console.log(getWeather('Guadalajara, México'));
+getWeather('Guadalajara, Jalisco')
+  .then((response) => {
+    console.log(response);
+  })
+  .catch((error) => {
+    console.log(error);
+  });

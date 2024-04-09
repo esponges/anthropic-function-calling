@@ -17,7 +17,7 @@
     "noUnusedParameters": true,
     "noImplicitAny": true,
     "noImplicitThis": false,
-    "strictNullChecks": false
+    "strictNullChecks": true,
   },
   "include": ["src/**/*", "__tests__/**/*"]
 }

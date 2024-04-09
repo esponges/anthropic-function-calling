@@ -19,5 +19,10 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  rules: {},
+  rules: {
+    '@typescript-eslint/semi': 'off',
+    '@typescript-eslint/comma-dangle': 'off',
+    "@typescript-eslint/prefer-nullish-coalescing": "off",
+    "@typescript-eslint/strict-boolean-expressions": "off",
+  },
 };
